@@ -1,0 +1,52 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          weather
+# Required-Start:    $all
+# Required-Stop:     $local_fs $remote_fs $syslog $named $network $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Weather bar clock
+# Description:       Subsystem file for Weather Bar Clock
+### END INIT INFO
+
+RETVAL=0
+prog="Weather"
+
+start() {
+        echo -n "Starting $prog"
+        sudo python /home/pi/Desktop/weather_service.py start
+        RETVAL=$?
+        echo
+}
+
+stop() {
+        echo -n "Stopping $prog"
+        sudo python /home/pi/Desktop/weather_service.py stop
+        RETVAL=$?
+        echo
+}
+
+status() {
+	python /home/pi/Desktop/weather_service.py status
+}
+
+case "$1" in
+        start)
+                start
+                ;;
+        stop)
+        	stop
+                ;;
+        restart)
+                stop
+                start
+                ;;
+        status)
+                status
+                RETVAL=$?
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart|status}"
+                RETVAL=1
+esac
+exit $RETVAL
